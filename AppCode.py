@@ -24,7 +24,7 @@ Vacation = Base.classes.vacation
 #################################################
 # Flask Setup
 #################################################
-app = Flask(__Vacation__)
+app = Flask(__vacation__)
 
 
 #################################################
@@ -38,7 +38,7 @@ def Home():
         f"Available Routes:<br/>"
         f"/api/v1.0/precipitation"
         f"/api/v1.0/stations"
-        f"/api/v1.0/<start>"
+        f"/api/v1.0/`/api/v1.0/tobs"
         f"/api/v1.0/<start>/<end>`"
     )
 
@@ -59,48 +59,72 @@ def precipitation():
     # Convert list of tuples into normal list
     all_prcp = list(np.ravel(results))
 
-    return jsonify(all_prcp )
+    return jsonify(all_prcp)
+     # Query all passengers
+    results = session.query(Passenger.name, Passenger.age, Passenger.sex).all()
+
+    session.close()
+
+    # Create a dictionary from the row data and append to a list of all_prcp
+    all_prcp = []
+    for date, prcp in results:
+        prcp_dict = {}
+        prcp_dict["date"] = date
+        prcp_dict["prcp"] = prcp
+        all_prcp.append(prcp_dict)
+
+    return jsonify(all_passengers)
 
 #Stations Route 
 
 @app.route("/api/v1.0/`/api/v1.0/stations")
-def names():
+def stations():
+    # Return a JSON list of stations from the dataset
+    # Create our session (link) from Python to the DB
+    session = Session(engine)
+
+    """Return a list of all passenger names"""
+    # Query all Stations
+    results = session.query(stations.name).all()
+
+    session.close()
+
+    # Convert list of tuples into normal list
+    all_stations = list(np.ravel(results))
+
+    return jsonify(all_stations)
+
+@app.route("/api/v1.0/`/api/v1.0/tobs")
+def Observations():
+  # Query the dates and temperature observations of the most active station for the last year of data.
+  
+  # Return a JSON list of temperature observations (TOBS) for the previous year.
+
     # Create our session (link) from Python to the DB
     session = Session(engine)
 
     """Return a list of all passenger names"""
     # Query all passengers
-    results = session.query(stations.name).all()
+    results = session.query(Measurement.tobs).all()
 
     session.close()
 
     # Convert list of tuples into normal list
-    all_names = list(np.ravel(results))
+    all_observaions = list(np.ravel(results))
 
-    return jsonify(all_names)
+    return jsonify(all_all_observations)
 
-#API Start 
-
-@app.route("/api/v1.0/<start>")
-def names():
-    # Create our session (link) from Python to the DB
-    session = Session(engine)
-
-    """Return a list of stattions""
-    # Query all stations
-    results = session.query(stations.name).all()
-
-    session.close()
-
-    # Convert list of tuples into normal list
-    all_names = list(np.ravel(results))
-
-    return jsonify(all_names)
-
-#API End
+#API Start / #API End
 
 @app.route("/api/v1.0/<start>/<end>")
-def names():
+def API():
+   # * Return a JSON list of the minimum temperature, the average temperature, and the max temperature for a given start or start-end range.
+
+  #* When given the start only, calculate `TMIN`, `TAVG`, and `TMAX` for all dates greater than and equal to the start date.
+
+  #* When given the start and the end date, calculate the `TMIN`, `TAVG`, and `TMAX` for dates between the start and end date inclusive.
+
+
     # Create our session (link) from Python to the DB
     session = Session(engine)
 
