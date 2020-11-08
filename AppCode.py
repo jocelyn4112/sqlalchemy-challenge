@@ -32,7 +32,7 @@ app = Flask(__Vacation__)
 #################################################
 
 @app.route("/")
-def welcome():
+def Home():
     """List all available api routes."""
     return (
         f"Available Routes:<br/>"
@@ -44,20 +44,22 @@ def welcome():
 
 #Percipitation route
 @app.route("/api/v1.0/precipitation")
-def names():
+def precipitation():
     # Create our session (link) from Python to the DB
     session = Session(engine)
 
-    """Return a list of all passenger names"""
-    # Query all passengers
-    results = session.query(Passenger.name).all()
+   ##"Convert the query results to a dictionary using `date` as the key and `prcp` as the value.
+    ##Return the JSON representation of your dictionary.
+
+    # Query all prcp
+    results = session.query(measurement.prcp).all()
 
     session.close()
 
     # Convert list of tuples into normal list
-    all_names = list(np.ravel(results))
+    all_prcp = list(np.ravel(results))
 
-    return jsonify(all_names)
+    return jsonify(all_prcp )
 
 #Stations Route 
 
