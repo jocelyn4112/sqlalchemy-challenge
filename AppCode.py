@@ -17,10 +17,10 @@ engine = create_engine("sqlite:///hawaii.sqlite")
 Base = automap_base()
 # reflect the tables
 Base.prepare(engine, reflect=True)
-Base.classes.keys()
+
 # Save reference to the table
-Measurement = Base.classes.Measurement
-Station = Base.classes.Station
+Measurement = Base.classes.measurement
+Station = Base.classes.station
 
 #################################################
 # Flask Setup
@@ -36,7 +36,7 @@ app = Flask(__name__)
 def Home():
     """List all available api routes."""
     return (
-        f"VacationTime!<br/>"
+        f"Vacation Time!<br/>"
         f"Available Routes:<br/>"
         f"/api/v1.0/precipitation<br/>"
         f"/api/v1.0/stations<br/>"
@@ -54,37 +54,24 @@ def Precipitation():
     ##Return the JSON representation of your dictionary.
 
      # Create a dictionary from the row data and append to a list of all_prcp
-all_prcp = []
-for date, prcp in all_prcp:
+     
+    results = session.query(Measurement.date, Measurement.prcp).all()
+    session.close()
+    all_prcp = []
+    for date, prcp in results:
         prcp_dict = {}
         prcp_dict["date"] = date
         prcp_dict["prcp"] = prcp
         all_prcp.append(prcp_dict)
 
-prcp_dict = {}
-        date,append()
-        prcp.append()
-        all_prcp.append(prcp_dict)
-
-    # Query all prcp
-results = session.query(Measurement.prcp).all()
-
-session.close()
-
-    # Convert list of tuples into normal list
-all_prcp = list(np.ravel(results))
-
-return jsonify(all_prcp)
+    return jsonify(all_prcp)
      # Query all 
 
-results = session.query(Measurement.id, Measurement.prcp).all()
-
-session.close()
-
-   
-return jsonify(all_prcp)
 
 #Stations Route 
+
+if __name__ == '__main__':
+    app.run(debug=True)
 
 @app.route("/api/v1.0/stations")
 def stations():
@@ -94,12 +81,12 @@ def stations():
     
     """Return a list of all Station names"""
     # Query all Stations
-results = session.query(stations.name).all()
+    results = session.query(stations.name).all()
 
-session.close()
+    session.close()
 
     # Convert list of tuples into normal list
-all_stations = list(np.ravel(results))
+    all_stations = list(np.ravel(results))
 
 return jsonify(all_stations)
 
