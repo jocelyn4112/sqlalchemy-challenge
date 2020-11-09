@@ -36,17 +36,18 @@ app = Flask(__name__)
 def Home():
     """List all available api routes."""
     return (
+        f"VacationTime!<br/>"
         f"Available Routes:<br/>"
-        f"/api/v1.0/precipitation"
-        f"/api/v1.0/stations"
-        f"/api/v1.0/`/api/v1.0/tobs"
+        f"/api/v1.0/precipitation<br/>"
+        f"/api/v1.0/stations<br/>"
+        f"/api/v1.0/`/api/v1.0/tobs<br/>"
         f"/api/v1.0/<start>/<end>`"
     )
 
 #Percipitation route
 @app.route("/api/v1.0/precipitation")
 def Precipitation():
-    # Create our session (link) from Python to the DB
+    # Create session (link) from Python to the DB
     session = Session(engine)
 
    ##"Convert the query results to a dictionary using `date` as the key and `prcp` as the value.
@@ -60,6 +61,11 @@ for date, prcp in all_prcp:
         prcp_dict["prcp"] = prcp
         all_prcp.append(prcp_dict)
 
+prcp_dict = {}
+        date,append()
+        prcp.append()
+        all_prcp.append(prcp_dict)
+
     # Query all prcp
 results = session.query(Measurement.prcp).all()
 
@@ -69,7 +75,7 @@ session.close()
 all_prcp = list(np.ravel(results))
 
 return jsonify(all_prcp)
-     # Query all passengers
+     # Query all 
 
 results = session.query(Measurement.id, Measurement.prcp).all()
 
