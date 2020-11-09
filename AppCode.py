@@ -17,14 +17,15 @@ engine = create_engine("sqlite:///hawaii.sqlite")
 Base = automap_base()
 # reflect the tables
 Base.prepare(engine, reflect=True)
-
+Base.classes.keys()
 # Save reference to the table
-Vacation = Base.classes.vacation
+Measurement = Base.classes.measurement
+Station = Base.classes.station
 
 #################################################
 # Flask Setup
 #################################################
-app = Flask(__vacation__)
+app = Flask(__name__)
 
 
 #################################################
@@ -44,12 +45,20 @@ def Home():
 
 #Percipitation route
 @app.route("/api/v1.0/precipitation")
-def precipitation():
+def Precipitation():
     # Create our session (link) from Python to the DB
     session = Session(engine)
 
    ##"Convert the query results to a dictionary using `date` as the key and `prcp` as the value.
     ##Return the JSON representation of your dictionary.
+
+     # Create a dictionary from the row data and append to a list of all_prcp
+all_prcp = []
+for date, prcp in all_prcp:
+        prcp_dict = {}
+        prcp_dict["date"] = date
+        prcp_dict["prcp"] = prcp
+        all_prcp.append(prcp_dict)
 
     # Query all prcp
     results = session.query(Measurement.prcp).all()
@@ -61,29 +70,23 @@ def precipitation():
 
     return jsonify(all_prcp)
      # Query all passengers
-    results = session.query(Passenger.name, Passenger.age, Passenger.sex).all()
 
-    session.close()
+    results = session.query(Measurement.id, Measurement.prcp).all()
 
-    # Create a dictionary from the row data and append to a list of all_prcp
-    all_prcp = []
-    for date, prcp in results:
-        prcp_dict = {}
-        prcp_dict["date"] = date
-        prcp_dict["prcp"] = prcp
-        all_prcp.append(prcp_dict)
+session.close()
 
-    return jsonify(all_passengers)
+   
+return jsonify(all_prcp)
 
 #Stations Route 
 
-@app.route("/api/v1.0/`/api/v1.0/stations")
+@app.route("/api/v1.0/stations")
 def stations():
     # Return a JSON list of stations from the dataset
     # Create our session (link) from Python to the DB
     session = Session(engine)
 
-    """Return a list of all passenger names"""
+    """Return a list of all Station names"""
     # Query all Stations
     results = session.query(stations.name).all()
 
@@ -94,7 +97,9 @@ def stations():
 
     return jsonify(all_stations)
 
-@app.route("/api/v1.0/`/api/v1.0/tobs")
+
+
+@app.route("/api/v1.0/tobs")
 def Observations():
   # Query the dates and temperature observations of the most active station for the last year of data.
   
