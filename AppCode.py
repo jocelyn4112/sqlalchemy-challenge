@@ -19,8 +19,8 @@ Base = automap_base()
 Base.prepare(engine, reflect=True)
 Base.classes.keys()
 # Save reference to the table
-Measurement = Base.classes.measurement
-Station = Base.classes.station
+Measurement = Base.classes.Measurement
+Station = Base.classes.Station
 
 #################################################
 # Flask Setup
@@ -61,17 +61,17 @@ for date, prcp in all_prcp:
         all_prcp.append(prcp_dict)
 
     # Query all prcp
-    results = session.query(Measurement.prcp).all()
+results = session.query(Measurement.prcp).all()
 
-    session.close()
+session.close()
 
     # Convert list of tuples into normal list
-    all_prcp = list(np.ravel(results))
+all_prcp = list(np.ravel(results))
 
-    return jsonify(all_prcp)
+return jsonify(all_prcp)
      # Query all passengers
 
-    results = session.query(Measurement.id, Measurement.prcp).all()
+results = session.query(Measurement.id, Measurement.prcp).all()
 
 session.close()
 
@@ -88,14 +88,14 @@ def stations():
 
     """Return a list of all Station names"""
     # Query all Stations
-    results = session.query(stations.name).all()
+results = session.query(stations.name).all()
 
-    session.close()
+session.close()
 
     # Convert list of tuples into normal list
-    all_stations = list(np.ravel(results))
+all_stations = list(np.ravel(results))
 
-    return jsonify(all_stations)
+return jsonify(all_stations)
 
 
 
@@ -103,21 +103,23 @@ def stations():
 def Observations():
   # Query the dates and temperature observations of the most active station for the last year of data.
   
-  # Return a JSON list of temperature observations (TOBS) for the previous year.
+  
+    session.query(Measurement.tobs, func.sum(Measurement.Total)).\
+        group_by(Measurement.tobs).\
+        order_by(func.sum(Measurement.Total).desc()).all()
 
-    # Create our session (link) from Python to the DB
-    session = Session(engine)
+ # Return a JSON list of temperature observations (TOBS) for the previous year.
+   
+  
+    # Query all 
+results = session.query(Measurement.tobs).all()
 
-    """Return a list of all passenger names"""
-    # Query all passengers
-    results = session.query(Measurement.tobs).all()
-
-    session.close()
+session.close()
 
     # Convert list of tuples into normal list
-    all_observaions = list(np.ravel(results))
+all_observaions = list(np.ravel(results))
 
-    return jsonify(all_all_observations)
+return jsonify(all_all_observations)
 
 #API Start / #API End
 
@@ -135,36 +137,14 @@ def API():
 
     """Return a list of all passenger names"""
     # Query all passengers
-    results = session.query(Passenger.name).all()
+results = session.query(Passenger.name).all()
 
-    session.close()
+session.close()
 
     # Convert list of tuples into normal list
-    all_names = list(np.ravel(results))
+all_names = list(np.ravel(results))
 
-    return jsonify(all_names)
-
-@app.route("/api/v1.0/passengers")
-def passengers():
-    # Create our session (link) from Python to the DB
-    session = Session(engine)
-
-    """Return a list of passenger data including the name, age, and sex of each passenger"""
-    # Query all passengers
-    results = session.query(Passenger.name, Passenger.age, Passenger.sex).all()
-
-    session.close()
-
-    # Create a dictionary from the row data and append to a list of all_passengers
-    all_passengers = []
-    for name, age, sex in results:
-        passenger_dict = {}
-        passenger_dict["name"] = name
-        passenger_dict["age"] = age
-        passenger_dict["sex"] = sex
-        all_passengers.append(passenger_dict)
-
-    return jsonify(all_passengers)
+return jsonify(all_names)
 
 
 if __name__ == '__main__':
