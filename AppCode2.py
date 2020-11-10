@@ -108,12 +108,12 @@ def Observations():
    
   
     # Query all 
-results = session.query(Measurement.tobs).all()
+    results = session.query(Measurement.tobs).all()
 
-session.close()
+    session.close()
 
     # Convert list of tuples into normal list
-all_observaions = list(np.ravel(results))
+    all_observaions = list(np.ravel(results))
 
 return jsonify(all_all_observations)
 
@@ -128,7 +128,7 @@ def API():
 
   #* When given the start only, calculate `TMIN`, `TAVG`, and `TMAX` for all dates greater than and equal to the start date.
     def calc_temps(start_date):
-    """TMIN, TAVG, and TMAX for a list of dates.
+    #"""TMIN, TAVG, and TMAX for a list of dates.
     
    ## Args:
      ##   start_date (string): A date string in the format %Y-%m-%d
@@ -138,43 +138,17 @@ def API():
      ##   TMIN, TAVE, TMAX""
 
     
-return session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).\
+        return session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).\
         filter(Measurement.date >= start_date).filter(Measurement.date <= end_date).all()
 
 ##function usage example
 print(calc_temps('2012-02-28'))
-# When given the start and the end date, calculate the `TMIN`, `TAVG`, and `TMAX` for dates between the start and end date inclusive.
-def calc_temps(start_date, end_date):
-   ##"""TMIN, TAVG, and TMAX for a list of dates.""##
-    
-  ## Args:
-       ## start_date (string): A date string in the format %Y-%m-%d
-      ##  end_date (string): A date string in the format %Y-%m-%d
-        
-   ## Returns:
-       ## TMIN, TAVE, and TMAX
-    """
-    
-    return session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).\
-        filter(Measurement.date >= start_date).filter(Measurement.date <= end_date).all()
 
 # function usage example
 print(calc_temps('2012-02-28', '2012-03-05'))
 
-def justice_league_character(real_name):
-    """Fetch the Justice League character whose real_name matches
-       the path variable supplied by the user, or a 404 if not."""
-    canonicalized = real_name.replace(" ", "").lower()
-    for character in justice_league_members:
-        search_term = character["real_name"].replace(" ", "").lower()
-        if search_term == canonicalized:
-            return jsonify(character)
-    return jsonify({"error": f"Character with real_name {real_name} not found."}), 404
-    # Create our session (link) from Python to the DB
-    session = Session(engine)
 
-    """Return a list of all passenger names"""
-    # Query all passengers
+   
 results = session.query(Passenger.name).all()
 
 session.close()
