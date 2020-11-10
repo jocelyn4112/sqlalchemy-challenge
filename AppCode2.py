@@ -12,12 +12,12 @@ from flask import Flask, jsonify
 # Database Setup
 #################################################
 engine = create_engine("sqlite:///hawaii.sqlite")
-
+#conn = engine.connect()
 # reflect an existing database into a new model
 Base = automap_base()
 # reflect the tables
 Base.prepare(engine, reflect=True)
-
+print(Base.classes.keys())
 # Save reference to the table
 Measurement = Base.classes.measurement
 Station = Base.classes.station
@@ -88,7 +88,7 @@ def stations():
     # Convert list of tuples into normal list
     all_stations = list(np.ravel(results))
 
-return jsonify(all_stations)
+    return jsonify(all_stations)
 
 
 
@@ -115,7 +115,7 @@ def Observations():
     # Convert list of tuples into normal list
     all_observaions = list(np.ravel(results))
 
-return jsonify(all_all_observations)
+    return jsonify(all_all_observations)
 
 #API Start / #API End
 
@@ -124,40 +124,11 @@ def API():
     # Return a JSON list of stations from the dataset
     # Create our session (link) from Python to the DB
     session = Session(engine)
-   # * Return a JSON list of the minimum temperature, the average temperature, and the max temperature for a given start or start-end range.
-
-  #* When given the start only, calculate `TMIN`, `TAVG`, and `TMAX` for all dates greater than and equal to the start date.
-    def calc_temps(start_date):
-    #"""TMIN, TAVG, and TMAX for a list of dates.
     
-   ## Args:
-     ##   start_date (string): A date string in the format %Y-%m-%d
-       ## end_date (string): A date string in the format %Y-%m-%d
-        
-   ## Returns:
-     ##   TMIN, TAVE, TMAX""
-
-    
-        return session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).\
+    return session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).\
         filter(Measurement.date >= start_date).filter(Measurement.date <= end_date).all()
-
-##function usage example
-print(calc_temps('2012-02-28'))
-
-# function usage example
-print(calc_temps('2012-02-28', '2012-03-05'))
-
-
-   
-results = session.query(Passenger.name).all()
-
-session.close()
-
-    # Convert list of tuples into normal list
-all_names = list(np.ravel(results))
-
-return jsonify(all_names)
-
+    
+#session.close()
 
 if __name__ == '__main__':
     app.run(debug=True)
