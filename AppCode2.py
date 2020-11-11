@@ -40,8 +40,8 @@ def Home():
         f"Available Routes:<br/>"
         f"/api/v1.0/precipitation<br/>"
         f"/api/v1.0/stations<br/>"
-        f"/api/v1.0/`/api/v1.0/tobs<br/>"
-        f"/api/v1.0/<start>/<end>`"
+        f"/api/v1.0/api/v1.0/tobs<br/>"
+        f"/api/v1.0/start/end"
     )
 
 #Percipitation route
@@ -89,7 +89,7 @@ def stations():
 
 #Observations Route
 
-@app.route("/api/v1.0/tobs")
+@app.route("/api/v1.0/api/v1.0/tobs")
 def Observations():
     # Return a JSON list of stations from the dataset
     # Create our session (link) from Python to the DB
@@ -115,16 +115,22 @@ def Observations():
     return jsonify(all_observations)
 
 #API Start / #API End
-@app.route("/api/v1.0/<start>")
+
 @app.route("/api/v1.0/<start>/<end>")
 def API(start=None , end=None):
     # Return a JSON list of stations from the dataset
     # Create our session (link) from Python to the DB
+    # Return a JSON list of the minimum temperature, the average temperature, and the max temperature for a given start or start-end range.
+    #* When given the start only, calculate `TMIN`, `TAVG`, and `TMAX` for all dates greater than and equal to the start date.
+    # * When given the start and the end date, calculate the `TMIN`, `TAVG`, and `TMAX` for dates between the start and end date inclusive.
+
+
     session = Session(engine)
     
     stat = [func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs) ]
 
-    
+    print(start)
+    print(end)
     results = session.query(*stat).\
     filter(Measurement.date >= start).\
     filter(Measurement.date <= end).all()
